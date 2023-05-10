@@ -1,0 +1,108 @@
+<html>
+
+<head>
+	<style>
+		#error {
+			color: red;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="ok">
+	</div>
+	<div id="error">
+	</div>
+
+	<button id="f-acao">fail when Access-Control-Allow-Origin: *</button></br>
+	<button id="t-acao">ok when Access-Control-Allow-Origin: *</button></br>
+
+	<button id="f-p-acao">fail when Access-Control-Allow-Origin: *</button></br>
+	<button id="t-p-acao">ok when Access-Control-Allow-Origin: *</button></br>
+
+	<button id="t-s-acao">ok with credential when Access-Control-Allow-Origin: strict</button></br>
+	<button id="t-s-p-acao">ok with credential when Access-Control-Allow-Origin: strict</button></br>
+	<script>
+		function test_with_cred() {
+			fetch("http://localhost:8080/data.json", { credentials: "include" }).then((r) => {
+				r.json().then((j) => {
+					document.getElementById("ok").innerHTML = JSON.stringify(j);
+					document.getElementById("error").innerHTML = "";
+				})
+			}).catch((e) => {
+				console.log(e);
+				document.getElementById("ok").innerHTML = "";
+				document.getElementById("error").innerHTML = e.message;
+			})
+		}
+		function test_without_cred() {
+			fetch("http://localhost:8080/data.json").then((r) => {
+				r.json().then((j) => {
+					document.getElementById("ok").innerHTML = JSON.stringify(j);
+					document.getElementById("error").innerHTML = "";
+				})
+			}).catch((e) => {
+				console.log(e);
+				document.getElementById("ok").innerHTML = "";
+				document.getElementById("error").innerHTML = e.message;
+			})
+		}
+		document.getElementById("f-acao").addEventListener("click", test_with_cred);
+		document.getElementById("t-acao").addEventListener("click", test_without_cred);
+		function post_with_cred() {
+			fetch("http://localhost:8080/data.json", { method: "POST", credentials: "include" }).then((r) => {
+				r.json().then((j) => {
+					document.getElementById("ok").innerHTML = JSON.stringify(j);
+					document.getElementById("error").innerHTML = "";
+				})
+			}).catch((e) => {
+				console.log(e);
+				document.getElementById("ok").innerHTML = "";
+				document.getElementById("error").innerHTML = e.message;
+			})
+		}
+		function post_without_cred() {
+			fetch("http://localhost:8080/data.json", { method: "POST" }).then((r) => {
+				r.json().then((j) => {
+					document.getElementById("ok").innerHTML = JSON.stringify(j);
+					document.getElementById("error").innerHTML = "";
+				})
+			}).catch((e) => {
+				console.log(e);
+				document.getElementById("ok").innerHTML = "";
+				document.getElementById("error").innerHTML = e.message;
+			})
+		}
+		document.getElementById("f-p-acao").addEventListener("click", post_with_cred);
+		document.getElementById("t-p-acao").addEventListener("click", post_without_cred);
+		function test_with_cred_strict() {
+			fetch("http://localhost:8080/strict/data.json", { credentials: "include" }).then((r) => {
+				r.json().then((j) => {
+					document.getElementById("ok").innerHTML = JSON.stringify(j);
+					document.getElementById("error").innerHTML = "";
+				})
+			}).catch((e) => {
+				console.log(e);
+				document.getElementById("ok").innerHTML = "";
+				document.getElementById("error").innerHTML = e.message;
+			})
+		}
+		function post_with_cred_strict() {
+			fetch("http://localhost:8080/strict/data.json", { method: "POST" }).then((r) => {
+				r.json().then((j) => {
+					document.getElementById("ok").innerHTML = JSON.stringify(j);
+					document.getElementById("error").innerHTML = "";
+				})
+			}).catch((e) => {
+				console.log(e);
+				document.getElementById("ok").innerHTML = "";
+				document.getElementById("error").innerHTML = e.message;
+			})
+		}
+		document.getElementById("t-s-acao").addEventListener("click", post_with_cred_strict);
+		document.getElementById("t-s-p-acao").addEventListener("click", post_with_cred_strict);
+
+	</script>
+</body>
+
+</html>
